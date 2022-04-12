@@ -37,14 +37,14 @@
   <arg name="physical_params" default="$(find ur_description)/config/ur5e/physical_parameters.yaml"/>
   <arg name="visual_params" default="$(find ur_description)/config/ur5e/visual_parameters.yaml"/>
   <!-- 1. PositionJointInterface 2. EffortJointInterface -->
-  <arg name="transmission_hw_interface" default="hardware_interface/EffortJointInterface"/>
-  <arg name="environment" default="empty" doc="Specify the virtual environment"/>
+  <arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+  <arg name="environment" default="environment" doc="Specify the virtual environment"/>
   <arg name="gazebo_world" default="$(find ur_gazebo)/worlds/$(arg environment).world"/>
 
   <!-- Controller configuration -->
   <arg name="controller_config_file" default="$(find ur_gazebo)/config/ur5e_controllers.yaml" doc="Config file used for defining the ROS-Control controllers."/>
   <arg name="controllers" default="joint_state_controller" doc="Controllers that are activated by default."/>
-  <arg name="specified_controller" default="joint_torque_controller" doc="Controllers that are activated by default."/>
+  <arg name="specified_controller" default="pos_joint_traj_controller" doc="Controllers that are activated by default."/>
 
   <!-- cartesian_velocity_controller joint_torque_controller-->
 
@@ -53,7 +53,7 @@
   <arg name="tf_pub_rate" default="500" doc="Rate at which robot_state_publisher should publish transforms."/>
 
   <!-- Gazebo parameters -->
-  <arg name="paused" default="false" doc="Starts Gazebo in paused mode" />
+  <arg name="paused" default="true" doc="Starts Gazebo in paused mode" />
   <arg name="gui" default="true" doc="Starts Gazebo gui" />
 
   <!-- Load urdf on the parameter server -->

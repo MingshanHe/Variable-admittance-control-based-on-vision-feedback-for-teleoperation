@@ -77,4 +77,29 @@
     <child link="base_link"/>
     <origin xyz="0 0 0" rpy="0 0 0"/>
   </joint>
+
+  <link name="tool_cylinder0_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.05" radius="0.005"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="tool_joint0" type="fixed">
+    <parent link="tool0"/>
+    <child link="tool_cylinder0_link"/>
+    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+  </joint>
+  <link name="tool_cylinder1_link">
+    <visual>
+      <geometry>
+        <cylinder length="0.001" radius="0.01"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="tool_joint1" type="fixed">
+    <parent link="tool_cylinder0_link"/>
+    <child link="tool_cylinder1_link"/>
+    <origin xyz="0 0 0.025" rpy="0 0 0"/>
+  </joint>
 </robot>
