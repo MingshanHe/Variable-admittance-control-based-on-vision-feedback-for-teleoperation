@@ -1,0 +1,13 @@
+# workspace_limits: the range of workspace
+workspace_limits: [-0.50, 0.50, 0.25, 0.80, 0.30, 0.75]
+
+home_joint_position: [0.0, -2.33, 1.57, 0.0, 0.0, 0.0]
+
+work_start_pose: [0.4, 0.0, 0.45, 0.0, 1.0, 0.0, 0.0]
+
+grasp_pose: [0.4, 0.0, 0.35, 0.0, 0.0, 0.0, 0.0]
+# the pixel number of map
+predict_map_size: [255, 255]
+
+root_name: base_link
+tip_name: tool0
