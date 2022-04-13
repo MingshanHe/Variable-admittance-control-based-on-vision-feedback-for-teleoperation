@@ -109,3 +109,35 @@ void Control_Strategy::Joint_State_Cb(const control_msgs::JointTrajectoryControl
         Jnt_Position(i) = msg.actual.positions[i];
     }
 }
+
+//!-                    UTILIZATION                      -!//
+
+bool Control_Strategy::get_rotation_matrix(Matrix6d & rotation_matrix,
+    tf::TransformListener & listener,
+    std::string from_frame,
+    std::string to_frame) {
+  tf::StampedTransform transform;
+  Matrix3d rotation_from_to;
+  try {
+    listener.lookupTransform(from_frame, to_frame,
+                            ros::Time(0), transform);
+    tf::matrixTFToEigen(transform.getBasis(), rotation_from_to);
+    rotation_matrix.setZero();
+    rotation_matrix.topLeftCorner(3, 3) = rotation_from_to;
+    rotation_matrix.bottomRightCorner(3, 3) = rotation_from_to;
+  }
+  catch (tf::TransformException ex) {
+    rotation_matrix.setZero();
+    ROS_WARN_STREAM_THROTTLE(1, "Waiting for TF from: " << from_frame << " to: " << to_frame );
+    return false;
+  }
+  return true;
+}
+
+void Control_Strategy::run(){
+
+    while (nh_.ok()) {
+        ros::spinOnce();
+        loop_rate.sleep();
+    }
+}

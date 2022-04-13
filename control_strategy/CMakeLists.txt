@@ -18,6 +18,9 @@ find_package(catkin REQUIRED COMPONENTS
   eigen_conversions
   kdl_parser
   kdl_conversions
+  tf
+  tf_conversions
+  pcl_conversions
 )
 
 ## System dependencies are found with CMake's conventions
@@ -153,6 +156,7 @@ add_library(filter
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
+add_executable(target_pcl_publish_node src/utils/target_pcl_publish.cpp)
 add_executable(control_strategy_node src/control_strategy_node.cpp)
 
 ## Rename C++ executable without prefix
@@ -163,6 +167,7 @@ add_executable(control_strategy_node src/control_strategy_node.cpp)
 
 ## Add cmake target dependencies of the executable
 ## same as for the library above
+add_dependencies(target_pcl_publish_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(control_strategy_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 add_dependencies(kinematics ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 ## Specify libraries to link a library or executable target against
@@ -170,6 +175,12 @@ target_link_libraries(  logger
   ${catkin_LIBRARIES}
 )
 target_link_libraries(  filter
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(  target_pcl_publish_node
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(  control_strategy_node
   ${catkin_LIBRARIES}
 )
 target_link_libraries(control_strategy_node

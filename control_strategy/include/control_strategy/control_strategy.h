@@ -19,6 +19,10 @@
 #include "Eigen/Dense"
 #include <eigen_conversions/eigen_msg.h>
 
+#include <tf/transform_datatypes.h>
+#include <tf_conversions/tf_eigen.h>
+#include <tf/transform_listener.h>
+
 #include "kinematics_base.h"
 
 #define Joint_Trajectory_Pub_Topic          "/pos_joint_traj_controller/command"
@@ -29,7 +33,7 @@ typedef Matrix<double, 7, 1> Vector7d;
 typedef Matrix<double, 6, 1> Vector6d;
 typedef Matrix<double, 6, 6> Matrix6d;
 
-class Control_Strategy: Kinematics_Base
+class Control_Strategy: public Kinematics_Base
 {
 private:
     /* data */
@@ -44,6 +48,11 @@ public:
     void Go_Home(void);
     void Go_Work(void);
     void Go(Eigen::Vector3d Position);
+    void run();
+private:
+    bool get_rotation_matrix(Matrix6d & rotation_matrix,
+                            tf::TransformListener & listener,
+                            std::string from_frame,  std::string to_frame);
 public:
     void Joint_State_Cb(const control_msgs::JointTrajectoryControllerState &msg);
 public:

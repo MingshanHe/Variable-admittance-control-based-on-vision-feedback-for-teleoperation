@@ -8,7 +8,6 @@ bool Kinematics_Base::init(ros::NodeHandle &n)
     std::string robot_description, root_name, tip_name;
 
     std::string name_space = nh_.getNamespace();
-    std::cout<< "--------------------> name_space:  " << name_space << std::endl;
 
     if (!ros::param::search(name_space,"robot_description", robot_description))
     {

@@ -25,10 +25,5 @@ int main(int argc, char **argv)
     std::cout<<"[STATE INFO] Go Work Successfully."<<std::endl;
     sleep(2);
 
-
-    while (ros::ok())
-    {
-        ros::spinOnce();
-        loop_rate.sleep();
-    }
+    control_strategy.run();
 }
