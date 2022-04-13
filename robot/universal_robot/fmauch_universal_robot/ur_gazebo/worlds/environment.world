@@ -437,18 +437,18 @@
       <pose>-1.03392 0.058635 0.8 0 -0 0</pose>
     </model>
     <state world_name='default'>
-      <sim_time>304 47000000</sim_time>
-      <real_time>68 471508829</real_time>
-      <wall_time>1649763272 20282819</wall_time>
-      <iterations>68202</iterations>
+      <sim_time>336 860000000</sim_time>
+      <real_time>33 14298810</real_time>
+      <wall_time>1649860554 916131754</wall_time>
+      <iterations>32813</iterations>
       <model name='Base'>
-        <pose>0 -0 0.358591 0 0 -2e-06</pose>
-        <scale>1 1 1</scale>
+        <pose>2e-06 0 0.327458 0 0 -2e-06</pose>
+        <scale>1 1 0.913182</scale>
         <link name='link_4'>
-          <pose>0 -0 0.358591 0 0 -2e-06</pose>
-          <velocity>1.7e-05 -0 0.005484 0 4.7e-05 0</velocity>
-          <acceleration>0.033342 7.8e-05 10.9685 -0.00022 0.092975 -9.4e-05</acceleration>
-          <wrench>0.000884 2e-06 0.29065 0 -0 0</wrench>
+          <pose>2e-06 0 0.327458 0 0 -2e-06</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 -9.8 0 -0 0</acceleration>
+          <wrench>0 0 -0.259686 0 -0 0</wrench>
         </link>
       </model>
       <model name='cafe_table'>
@@ -507,7 +507,7 @@
     </state>
     <gui fullscreen='0'>
       <camera name='user_camera'>
-        <pose>0.243607 -5.94025 4.03298 0 0.497798 1.44985</pose>
+        <pose>0.040876 -3.86245 1.85539 -0 0.253798 1.47785</pose>
         <view_controller>orbit</view_controller>
         <projection_type>perspective</projection_type>
       </camera>

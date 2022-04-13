@@ -46,7 +46,7 @@
       -urdf
       -param $(arg robot_description_param_name)
       -model $(arg gazebo_model_name)
-      -z 0.8
+      -z 0.7
       -J shoulder_lift_joint -1.8
       -J elbow_joint 1.0
       -J wrist_2_joint -1.57"
