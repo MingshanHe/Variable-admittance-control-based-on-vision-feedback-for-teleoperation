@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 
+#include "controller_manager_msgs/SwitchController.h"
 #include "trajectory_msgs/JointTrajectory.h"
 #include "trajectory_msgs/JointTrajectoryPoint.h"
 #include "control_msgs/JointTrajectoryControllerState.h"
@@ -53,6 +54,7 @@ private:
     bool get_rotation_matrix(Matrix6d & rotation_matrix,
                             tf::TransformListener & listener,
                             std::string from_frame,  std::string to_frame);
+    void Switch_Controller(const int &cognition);
 public:
     void Joint_State_Cb(const control_msgs::JointTrajectoryControllerState &msg);
 public:
@@ -65,6 +67,10 @@ private:
     Kinematics_Base                                         kinematics_base;
     ros::Publisher                                          Joint_Traj_Pub;
     ros::Subscriber                                         Joint_Traj_Sub;
+    ros::ServiceClient                                      switch_controller_client;
+    controller_manager_msgs::SwitchController               switch_controller_srv;
+    std::vector<std::string, std::allocator<std::string>>   start_controllers;
+    std::vector<std::string, std::allocator<std::string>>   stop_controllers;
     ros::Rate                                               loop_rate;
 
 private:

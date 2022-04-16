@@ -116,22 +116,104 @@ bool Control_Strategy::get_rotation_matrix(Matrix6d & rotation_matrix,
     tf::TransformListener & listener,
     std::string from_frame,
     std::string to_frame) {
-  tf::StampedTransform transform;
-  Matrix3d rotation_from_to;
-  try {
-    listener.lookupTransform(from_frame, to_frame,
-                            ros::Time(0), transform);
-    tf::matrixTFToEigen(transform.getBasis(), rotation_from_to);
-    rotation_matrix.setZero();
-    rotation_matrix.topLeftCorner(3, 3) = rotation_from_to;
-    rotation_matrix.bottomRightCorner(3, 3) = rotation_from_to;
-  }
-  catch (tf::TransformException ex) {
-    rotation_matrix.setZero();
-    ROS_WARN_STREAM_THROTTLE(1, "Waiting for TF from: " << from_frame << " to: " << to_frame );
-    return false;
-  }
-  return true;
+    tf::StampedTransform transform;
+    Matrix3d rotation_from_to;
+    try {
+        listener.lookupTransform(from_frame, to_frame,
+                                ros::Time(0), transform);
+        tf::matrixTFToEigen(transform.getBasis(), rotation_from_to);
+        rotation_matrix.setZero();
+        rotation_matrix.topLeftCorner(3, 3) = rotation_from_to;
+        rotation_matrix.bottomRightCorner(3, 3) = rotation_from_to;
+    }
+    catch (tf::TransformException ex) {
+        rotation_matrix.setZero();
+        ROS_WARN_STREAM_THROTTLE(1, "Waiting for TF from: " << from_frame << " to: " << to_frame );
+        return false;
+    }
+    return true;
+}
+
+void Control_Strategy::Switch_Controller(const int &cognition)
+{
+    std::string cartesian_position_controller("cartesian_position_controller");
+    std::string cartesian_velocity_controller("cartesian_velocity_controller");
+    switch (cognition)
+    {
+    case 0:
+        start_controllers.clear();
+        stop_controllers.clear();
+
+        start_controllers.push_back(cartesian_position_controller);
+        switch_controller_srv.request.start_controllers = start_controllers;
+        switch_controller_srv.request.stop_controllers = stop_controllers;
+        switch_controller_srv.request.strictness = 2;
+        if(switch_controller_client.call(switch_controller_srv))
+        {
+            ROS_INFO("Switch 'cartesian_position_controller' Successfully.");
+        }
+        else
+        {
+            ROS_ERROR("Switch 'cartesian_position_controller' Failed. Please Check Code");
+        }
+        break;
+    case 1:
+        start_controllers.clear();
+        stop_controllers.clear();
+
+        start_controllers.push_back(cartesian_velocity_controller);
+        switch_controller_srv.request.start_controllers = start_controllers;
+        switch_controller_srv.request.stop_controllers = stop_controllers;
+        switch_controller_srv.request.strictness = 2;
+        if(switch_controller_client.call(switch_controller_srv))
+        {
+            ROS_INFO("Switch 'cartesian_velocity_controller' Successfully.");
+        }
+        else
+        {
+            ROS_ERROR("Switch 'cartesian_velocity_controller' Failed. Please Check Code");
+        }
+        break;
+    case 2:
+        start_controllers.clear();
+        stop_controllers.clear();
+
+        start_controllers.push_back(cartesian_position_controller);
+        stop_controllers.push_back(cartesian_velocity_controller);
+        switch_controller_srv.request.start_controllers = start_controllers;
+        switch_controller_srv.request.stop_controllers = stop_controllers;
+        switch_controller_srv.request.strictness = 2;
+        if(switch_controller_client.call(switch_controller_srv))
+        {
+            ROS_INFO("Switch 'cartesian_position_controller' Successfully.");
+        }
+        else
+        {
+            ROS_ERROR("Switch 'cartesian_position_controller' Failed. Please Check Code");
+        }
+        break;
+    case 3:
+        start_controllers.clear();
+        stop_controllers.clear();
+
+        start_controllers.push_back(cartesian_velocity_controller);
+        stop_controllers.push_back(cartesian_position_controller);
+        switch_controller_srv.request.start_controllers = start_controllers;
+        switch_controller_srv.request.stop_controllers = stop_controllers;
+        switch_controller_srv.request.strictness = 2;
+        if(switch_controller_client.call(switch_controller_srv))
+        {
+            ROS_INFO("Switch 'cartesian_velocity_controller' Successfully.");
+        }
+        else
+        {
+            ROS_ERROR("Switch 'cartesian_velocity_controller' Failed. Please Check Code");
+        }
+        break;
+    default:
+        ROS_ERROR("Switch Controller Cognition Failed. Please Check Code and Choose ( 0 or 1 ).");
+        break;
+    }
 }
 
 void Control_Strategy::run(){
