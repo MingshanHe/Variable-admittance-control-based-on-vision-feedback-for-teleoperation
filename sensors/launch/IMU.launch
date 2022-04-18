@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<launch>
+
+    <group ns="IMU1">
+        <arg name="usb" default="/device/usb1"/>
+        <arg name="imu" default="imu1"/>
+        <param name="frequency" type="double" value="125" />
+        <param name="usb" value="$(arg usb)" />
+        <param name="imu" value="$(arg imu)" />
+        <node pkg="sensors" type="MPU6050_node" name="IMU1">
+            <param name="frequency" type="double" value="125" />
+            <param name="usb" value="$(arg usb)" />
+            <param name="imu" value="$(arg imu)" />
+        </node>
+    </group>
+
+    <group ns="IMU2">
+        <arg name="usb" default="/device/usb2"/>
+        <arg name="imu" default="imu2"/>
+        <param name="frequency" type="double" value="125" />
+        <param name="usb" value="$(arg usb)" />
+        <param name="imu" value="$(arg imu)" />
+        <node pkg="sensors" type="MPU6050_node" name="IMU2">
+            <param name="frequency" type="double" value="125" />
+            <param name="usb" value="$(arg usb)" />
+            <param name="imu" value="$(arg imu)" />
+        </node>
+    </group>
+
+</launch>

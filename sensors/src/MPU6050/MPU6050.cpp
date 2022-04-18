@@ -1,6 +1,6 @@
 #include "MPU6050/MPU6050.h"
 
-MPU6050::MPU6050(char * Device_, int Baudrate_, char * Name_, ros::NodeHandle nh_, double frequency) :
+MPU6050::MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::NodeHandle nh_, double frequency) :
     Serial(), nh(nh_)
 {
     // Serial serial;
@@ -15,6 +15,7 @@ MPU6050::MPU6050(char * Device_, int Baudrate_, char * Name_, ros::NodeHandle nh
 
     timer_ = nh.createTimer(ros::Duration(1/frequency), &MPU6050::Callback, this);
 
+    ros::spin();
 }
 
 float * MPU6050::Read_Data()

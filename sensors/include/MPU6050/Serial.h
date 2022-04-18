@@ -20,7 +20,7 @@ private:
     struct termios  Serial_stNew;
     struct termios  Serial_stOld;
 
-    char *          Device;
+    const char *    Device;
     int             Baudrate;
 
     int             Serial_nFd;
@@ -30,10 +30,10 @@ public:
     };
     ~Serial(){};
 public:
-    int Init(char * Device_, int Baudrate_);
+    int Init(const char * Device_, int Baudrate_);
 };
 
-int Serial::Init(char * Device_, int Baudrate_)
+int Serial::Init(const char * Device_, int Baudrate_)
 {
     Device = Device_;
     Baudrate = Baudrate_;

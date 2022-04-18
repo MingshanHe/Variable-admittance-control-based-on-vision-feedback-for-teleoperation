@@ -6,7 +6,7 @@
 class MPU6050 : public Serial
 {
 public:
-    MPU6050(char * Device_, int Baudrate_, char * Name_, ros::NodeHandle nh, double frequency);
+    MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::NodeHandle nh, double frequency);
     ~MPU6050(){};
 public:
     float * Read_Data();
@@ -32,7 +32,7 @@ private:
     unsigned char       leftknee_recdata[1];
     unsigned char       Re_buf[11];
 
-    char *              Name;
+    const char *        Name;
 
     ros::NodeHandle     nh;
     ros::Timer          timer_;
