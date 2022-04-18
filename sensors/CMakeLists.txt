@@ -10,6 +10,7 @@ project(sensors)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   sensor_msgs
+  geometry_msgs
   std_msgs
 )
 
@@ -105,7 +106,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
  INCLUDE_DIRS include
 #  LIBRARIES sensors
- CATKIN_DEPENDS roscpp sensor_msgs std_msgs
+ CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs std_msgs
  DEPENDS system_lib
 )
 

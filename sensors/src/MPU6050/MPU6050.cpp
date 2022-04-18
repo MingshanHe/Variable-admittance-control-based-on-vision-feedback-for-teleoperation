@@ -13,6 +13,8 @@ MPU6050::MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::N
 
     Name = Name_;
 
+    IMU_Pub = nh.advertise<geometry_msgs::Vector3>("IMU",2);
+
     timer_ = nh.createTimer(ros::Duration(1/frequency), &MPU6050::Callback, this);
 
     ros::spin();
@@ -69,4 +71,8 @@ float * MPU6050::Read_Data()
 void MPU6050::Callback(const ros::TimerEvent& event){
     float * Angle;
     Angle = Read_Data();
+    msg.x = Angle[0];
+    msg.y = Angle[1];
+    msg.z = Angle[2];
+    IMU_Pub.publish(msg);
 }
