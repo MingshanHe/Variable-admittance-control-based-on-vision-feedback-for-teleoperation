@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 
     if (!nh.getParam("frequency", frequency)) { ROS_ERROR("Couldn't retrieve the frequency."); return -1;}
 
+    TrackPoint track = TrackPoint(nh, frequency);
 
-
-    TrackPoint track = TrackPoint(nh);
+    track.run();
 }

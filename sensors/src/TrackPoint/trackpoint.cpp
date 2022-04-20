@@ -1,6 +1,6 @@
 #include "TrackPoint/trackpoint.h"
-TrackPoint::TrackPoint(ros::NodeHandle nh_):
-    nh(nh_)
+TrackPoint::TrackPoint(ros::NodeHandle nh_, double frequency):
+    nh(nh_), loop_rate(frequency)
 {
     nh = nh_;
     IMU1_Sub = nh.subscribe("/IMU1/IMU", 2, &TrackPoint::IMU1_Sub_Callback, this);
@@ -8,13 +8,9 @@ TrackPoint::TrackPoint(ros::NodeHandle nh_):
     Track_Pub = nh.advertise<geometry_msgs::Vector3>("/track_node/trackpoint", 1);
 }
 
-TrackPoint::~TrackPoint()
-{
-}
-
 void TrackPoint::IMU1_Sub_Callback(const geometry_msgs::Vector3 &msg)
 {
-    // double a = 1;
+    tf::TransformBroadcaster    IMU1_TF_br;
     transform.setOrigin(tf::Vector3(0.0, 0.0, upperArm));
     quaternion.setRPY(msg.x, msg.y, msg.z);
     transform.setRotation(quaternion);
@@ -23,24 +19,29 @@ void TrackPoint::IMU1_Sub_Callback(const geometry_msgs::Vector3 &msg)
 
 void TrackPoint::IMU2_Sub_Callback(const geometry_msgs::Vector3 &msg)
 {
-    // double b = 1;
+    tf::TransformBroadcaster    IMU2_TF_br;
     transform.setOrigin(tf::Vector3(0.0, 0.0, foreArm));
     quaternion.setRPY(msg.x, msg.y, msg.z);
     transform.setRotation(quaternion);
-    IMU1_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "upperArm", "foreArm"));
+    IMU2_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "upperArm", "foreArm"));
 }
 
-// bool TrackPoint::get_rotation_matrix(std::string from_frame, std::string to_frame) {
-//     // tf::StampedTransform transform;
-
-//         // IMU_TF_listener.lookupTransform(from_frame, to_frame, ros::Time(0), transform);
-//         // track_point = transform.getOrigin();
-//         return true;
-// }
+bool TrackPoint::get_rotation_matrix(std::string from_frame, std::string to_frame) {
+    tf::TransformListener       IMU_TF_listener;
+    try{
+        IMU_TF_listener.lookupTransform(from_frame, to_frame, ros::Time(0), listen_transform);
+        track_point = listen_transform.getOrigin();
+        return true;
+    }
+    catch (tf::TransformException ex){
+        ROS_ERROR("%s",ex.what());
+        return false;
+    }
+}
 
 void TrackPoint::publish_track_node(){
 
-    // if(get_rotation_matrix("world", "foreArm")){
+    if(get_rotation_matrix("world", "foreArm")){
         geometry_msgs::Vector3 msg;
 
         msg.x = track_point.x();
@@ -48,7 +49,7 @@ void TrackPoint::publish_track_node(){
         msg.z = track_point.z();
 
         Track_Pub.publish(msg);
-    // }
+    }
 }
 
 void TrackPoint::run()
@@ -57,7 +58,7 @@ void TrackPoint::run()
     {
         ros::spinOnce();
 
-        // loop_rate.sleep();
+        loop_rate.sleep();
 
         publish_track_node();
     }
