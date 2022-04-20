@@ -12,6 +12,9 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   geometry_msgs
   std_msgs
+  kdl_parser
+  kdl_conversions
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -125,7 +128,9 @@ include_directories(
 add_library(MPU6050
   src/MPU6050/MPU6050.cpp
 )
-
+add_library(TrackPoint
+  src/TrackPoint/trackpoint.cpp
+)
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
@@ -135,6 +140,7 @@ add_library(MPU6050
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 add_executable(MPU6050_node src/MPU6050_node.cpp)
+add_executable(Track_node src/Track_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -145,16 +151,22 @@ add_executable(MPU6050_node src/MPU6050_node.cpp)
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(MPU6050_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-
+add_dependencies(Track_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 ## Specify libraries to link a library or executable target against
 target_link_libraries(MPU6050
+  ${catkin_LIBRARIES}
+)
+target_link_libraries(TrackPoint
   ${catkin_LIBRARIES}
 )
 target_link_libraries(MPU6050_node
   ${catkin_LIBRARIES}
   MPU6050
 )
-
+target_link_libraries(Track_node
+  ${catkin_LIBRARIES}
+  TrackPoint
+)
 #############
 ## Install ##
 #############
