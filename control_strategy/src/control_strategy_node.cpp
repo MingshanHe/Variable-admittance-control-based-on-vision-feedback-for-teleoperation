@@ -11,10 +11,9 @@ int main(int argc, char **argv)
     if (!nh.getParam("home_joint_position", home_joint_position)) { ROS_ERROR("Couldn't retrieve the home pose."); return -1;}
     if (!nh.getParam("work_start_pose", work_start_pose)) { ROS_ERROR("Couldn't retrieve the work start pose."); return -1;}
     if (!nh.getParam("grasp_pose", grasp_pose)) { ROS_ERROR("Couldn't retrieve the grasp pose."); return -1;}
-    if (!nh.getParam("predict_map_size", predict_map_size)) { ROS_ERROR("Couldn't retrieve the predict map size."); return -1;}
     double frequency = 125;
 
-    Control_Strategy control_strategy(nh, frequency, home_joint_position, work_start_pose, grasp_pose);
+    Control_Strategy control_strategy(nh, frequency, home_joint_position, work_start_pose, grasp_pose, workspace_limits);
 
     ros::Rate loop_rate(frequency);
     sleep(2);

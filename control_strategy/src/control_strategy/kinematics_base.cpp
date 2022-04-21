@@ -126,8 +126,6 @@ bool Kinematics_Base::init(ros::NodeHandle &n)
 
 KDL::JntArray Kinematics_Base::inverse_kinematics(KDL::JntArray Jnt_Position_, KDL::Frame T_base_goal)
 {
-    // Joint_Position = Jnt_Position_;
-    // fk_pos_solver_->JntToCart(Joint_Position, End_Pos_Cmd_);
     ik_pos_solver_->CartToJnt(Jnt_Position_, T_base_goal, Jnt_Pos_Cmd_);
     return Jnt_Pos_Cmd_;
 }

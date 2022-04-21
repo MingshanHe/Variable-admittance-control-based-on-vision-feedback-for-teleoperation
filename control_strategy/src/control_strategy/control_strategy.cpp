@@ -1,21 +1,23 @@
-// #include "control_strategy/control_strategy.h"
-#include "control_strategy.h"
+#include "control_strategy/control_strategy.h"
 
 Control_Strategy::Control_Strategy(
-    const ros::NodeHandle &nh_,
+    const ros::NodeHandle   &nh_,
     double                  frequency,
     std::vector<double>     home_joint_position_,
     std::vector<double>     work_start_pose_,
-    std::vector<double>     grasp_pose_):
+    std::vector<double>     grasp_pose_,
+    std::vector<double>     workspace_limits_):
     nh(nh_), loop_rate(frequency),
     home_joint_position(home_joint_position_.data()),
     work_start_pose(work_start_pose_.data()),
-    grasp_pose(grasp_pose_.data())
+    grasp_pose(grasp_pose_.data()),
+    workspace_limits(workspace_limits_)
 {
     kinematics_base.init(nh);
     // ROS Pub&Sub
     Joint_Traj_Pub  = nh.advertise<trajectory_msgs::JointTrajectory>(Joint_Trajectory_Pub_Topic, 1, true);
     Joint_Traj_Sub  = nh.subscribe(Joint_Trajectory_Sub_Topic, 5, &Control_Strategy::Joint_State_Cb, this, ros::TransportHints().reliable().tcpNoDelay());
+    Human_IMU_Sub   = nh.subscribe(Human_IMU_Sub_Topic,5, &Control_Strategy::Human_IMU_Cb, this, ros::TransportHints().reliable().tcpNoDelay());
     // traj intialize
     traj.joint_names.push_back("shoulder_pan_joint");
     traj.joint_names.push_back("shoulder_lift_joint");
@@ -25,11 +27,22 @@ Control_Strategy::Control_Strategy(
     traj.joint_names.push_back("wrist_3_joint");
 
     Jnt_Position.resize(6);
+    Cart_Robot_Pose.p.Zero();
+    Cart_Robot_Pose.M.Identity();
+    Cart_Human_Pose.p.Zero();
+    Cart_Human_Pose.M.Identity();
     ros::spinOnce();
     loop_rate.sleep();
 }
+//!-                    Robot Control Functions                      -!//
+void Control_Strategy::EfficiencyMove(){
+    //TODO: Add Efficiency Move
+}
 
-
+void Control_Strategy::VariableCompliantMove(){
+    //TODO: Add Variable Compliant Move
+}
+//!-                    Robot Initial Functions                      -!//
 void Control_Strategy::Go_Home(void)
 {
 
@@ -101,13 +114,19 @@ void Control_Strategy::Go(Eigen::Vector3d Position)
         i--;
     }
 }
+//!-                    Callbacks                       -!//
+void Control_Strategy::Joint_State_Cb(const control_msgs::JointTrajectoryControllerState &msg){
 
-void Control_Strategy::Joint_State_Cb(const control_msgs::JointTrajectoryControllerState &msg)
-{
     for (size_t i = 0; i < 6; i++)
     {
         Jnt_Position(i) = msg.actual.positions[i];
     }
+}
+
+void Control_Strategy::Human_IMU_Cb(const geometry_msgs::Vector3 &msg){
+    Cart_Human_Pose.p[0] = msg.x;
+    Cart_Human_Pose.p[1] = msg.y;
+    Cart_Human_Pose.p[2] = msg.z;
 }
 
 //!-                    UTILIZATION                      -!//
@@ -216,10 +235,41 @@ void Control_Strategy::Switch_Controller(const int &cognition)
     }
 }
 
+bool Control_Strategy::DetectWorkspace(){
+    this->fk_pos_solver_->JntToCart(Jnt_Position, Cart_Robot_Pose);
+    //TODO: detect if the position fo cart pose in the desired workspace
+    //TODO: if it is in return true else false
+    double x = Cart_Robot_Pose.p.x();
+    double y = Cart_Robot_Pose.p.y();
+    double z = Cart_Robot_Pose.p.z();
+    if (
+        (((x>workspace_limits[0])and(x<workspace_limits[1]))and((y>workspace_limits[2])and(y<workspace_limits[3]))and((z>workspace_limits[4])and(z<workspace_limits[5])))and
+        (((x>workspace_limits[7])and(x<workspace_limits[8]))and((y>workspace_limits[9])and(y<workspace_limits[10]))and((z>workspace_limits[11])and(z<workspace_limits[12])))
+    )
+    {
+        //TODO: Variable Admittance Control
+        VariableCompliantMove();
+        return true;
+    }
+    else
+    {
+        //TODO: Position Control
+        EfficiencyMove();
+        return false;
+    }
+}
 void Control_Strategy::run(){
 
     while (nh_.ok()) {
         ros::spinOnce();
+
         loop_rate.sleep();
+
+        if(DetectWorkspace()){
+            VariableCompliantMove();
+        }
+        else{
+            EfficiencyMove();
+        }
     }
 }

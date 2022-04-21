@@ -36,8 +36,8 @@
 class Kinematics_Base
 {
 public:
-  Kinematics_Base() {}
-  ~Kinematics_Base() {}
+  Kinematics_Base() {};
+  ~Kinematics_Base() {};
 
   bool init(ros::NodeHandle &n);
 

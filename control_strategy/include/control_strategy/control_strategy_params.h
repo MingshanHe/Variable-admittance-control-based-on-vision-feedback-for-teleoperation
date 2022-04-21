@@ -3,11 +3,12 @@
 #include <iostream>
 
 std::vector<double> workspace_limits;
+std::vector<double> workspace1;
+std::vector<double> workspace2;
 
 std::vector<double> home_joint_position;
 
 std::vector<double> work_start_pose;
 std::vector<double> grasp_pose;
-std::vector<double> predict_map_size;
 
 #endif
