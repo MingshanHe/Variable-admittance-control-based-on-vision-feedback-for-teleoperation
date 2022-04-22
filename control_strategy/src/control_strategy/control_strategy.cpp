@@ -36,7 +36,21 @@ Control_Strategy::Control_Strategy(
 }
 //!-                    Robot Control Functions                      -!//
 void Control_Strategy::EfficiencyMove(){
-    //TODO: Add Efficiency Move
+    Cart_Human_Pose.M = Rotation.Quaternion(work_start_pose[3],work_start_pose[4],work_start_pose[5],work_start_pose[6]);
+    ik_pos_solver_->CartToJnt(Jnt_Position, Cart_Human_Pose, Jnt_Position_cmd);
+
+    trajectory_msgs::JointTrajectoryPoint msg;
+    for (size_t i = 0; i < 6; i++)
+    {
+        msg.positions.push_back(Jnt_Position_cmd(i));
+    }
+    msg.time_from_start = ros::Duration(1);
+    traj.points.clear();
+    traj.points.push_back(msg);
+
+    Joint_Traj_Pub.publish(traj);
+    ros::spinOnce();
+    loop_rate.sleep();
 }
 
 void Control_Strategy::VariableCompliantMove(){
