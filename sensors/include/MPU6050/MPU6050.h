@@ -7,12 +7,11 @@
 class MPU6050 : public Serial
 {
 public:
-    MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::NodeHandle nh, double frequency);
+    MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::NodeHandle nh_);
     ~MPU6050(){};
 public:
-    float * Read_Data();
-private:
-    void    Callback(const ros::TimerEvent& event);
+    void Read_Data();
+    void    run();
 
 public:
     float                   angle_x;
@@ -38,6 +37,7 @@ private:
     ros::NodeHandle         nh;
     ros::Timer              timer_;
     ros::Publisher          IMU_Pub;
+    // ros::Rate           loop_rate;
 
     geometry_msgs::Vector3  msg;
 };

@@ -1,8 +1,10 @@
 #include "MPU6050/MPU6050.h"
 
-MPU6050::MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::NodeHandle nh_, double frequency) :
-    Serial(), nh(nh_)
+MPU6050::MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::NodeHandle nh_) :
+    Serial()
 {
+    nh = nh_;
+    IMU_Pub = nh.advertise<geometry_msgs::Vector3>("IMU",2);
     // Serial serial;
     // Serial_nFd = serial.Init(Device_, Baudrate_);
     Serial_nFd = this->Init(Device_,Baudrate_);
@@ -12,15 +14,29 @@ MPU6050::MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::N
     Serial_len=0;
 
     Name = Name_;
-
-    IMU_Pub = nh.advertise<geometry_msgs::Vector3>("IMU",2);
-
-    timer_ = nh.createTimer(ros::Duration(1/frequency), &MPU6050::Callback, this);
-
-    ros::spin();
+    // loop_rate = ros::Rate loop_rate_(125);
 }
 
-float * MPU6050::Read_Data()
+void MPU6050::run(){
+    ros::Rate loop_rate(10);
+    while (ros::ok())
+    {
+        float * Angle;
+
+        Read_Data();
+        // msg.x = 0.0;
+        // msg.y = 1;
+        // msg.z = 2;
+        msg.x = Ang[0];
+        msg.y = Ang[1];
+        msg.z = Ang[2];
+        IMU_Pub.publish(msg);
+        loop_rate.sleep();
+    }
+
+}
+
+void MPU6050::Read_Data()
 {
     Serial_len = read(Serial_nFd, leftknee_recdata, 1);
     Re_buf[Serial_k] = leftknee_recdata[0];
@@ -58,21 +74,12 @@ float * MPU6050::Read_Data()
                     break;
                 }
             }
-            float Ang_Vel_Acc[3];
-            Ang_Vel_Acc[0] = Ang[0];
-            Ang_Vel_Acc[1] = Vel[0];
-            Ang_Vel_Acc[2] = Acc[0];
+            // float Ang_Vel_Acc[3];
+            // Ang_Vel_Acc[0] = Ang[0];
+            // Ang_Vel_Acc[1] = Ang[1];
+            // Ang_Vel_Acc[2] = Ang[2];
             // std::cout<<Ang[0]<<","<<Vel[0]<<","<<Acc[0]<<std::endl;
-            return Ang_Vel_Acc;
         }
     }
 }
 
-void MPU6050::Callback(const ros::TimerEvent& event){
-    float * Angle;
-    Angle = Read_Data();
-    msg.x = Angle[0];
-    msg.y = Angle[1];
-    msg.z = Angle[2];
-    IMU_Pub.publish(msg);
-}
