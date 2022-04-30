@@ -79,7 +79,7 @@ void MPU6050::Read_Data()
             // Ang_Vel_Acc[0] = Ang[0];
             // Ang_Vel_Acc[1] = Ang[1];
             // Ang_Vel_Acc[2] = Ang[2];
-            std::cout<<Ang[0]<<","<<Ang[0]<<","<<Ang[0]<<std::endl;
+            std::cout<<Ang[0]<<","<<Ang[1]<<","<<Ang[2]<<std::endl;
         }
     }
 }
