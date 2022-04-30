@@ -11,7 +11,8 @@ int main(int argc, char **argv)
     // if (!nh.getParam("usb", usb)) { ROS_ERROR("Couldn't retrieve the usb."); return -1;}
     // if (!nh.getParam("imu", imu)) { ROS_ERROR("Couldn't retrieve the imu."); return -1;}
     // if (!nh.getParam("frequency", frequency)) { ROS_ERROR("Couldn't retrieve the frequency."); return -1;}
-    MPU6050 mpu6050 = MPU6050 ("/dev/ttyUSB0", B115200, "IMU0", nh);
+    MPU6050 mpu6050 = MPU6050 ("/dev/ttyUSB1", B115200, "IMU0", nh);
+    std::cout<<"Init Successfully."<<std::endl;
     mpu6050.run();
 
 

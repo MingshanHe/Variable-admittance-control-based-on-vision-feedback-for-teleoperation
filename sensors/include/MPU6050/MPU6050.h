@@ -1,5 +1,3 @@
-#ifndef MPU6050_H
-#define MPU6050_H
 #include "MPU6050/Serial.h"
 #include "ros/ros.h"
 #include "geometry_msgs/Vector3.h"
@@ -41,4 +39,3 @@ private:
 
     geometry_msgs::Vector3  msg;
 };
-#endif

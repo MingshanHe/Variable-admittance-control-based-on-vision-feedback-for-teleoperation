@@ -18,7 +18,7 @@ MPU6050::MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::N
 }
 
 void MPU6050::run(){
-    ros::Rate loop_rate(10);
+    ros::Rate loop_rate(115200);
     while (ros::ok())
     {
         float * Angle;
@@ -32,6 +32,7 @@ void MPU6050::run(){
         msg.z = Ang[2];
         IMU_Pub.publish(msg);
         loop_rate.sleep();
+        // std::cout<<"Published"<<std::endl;
     }
 
 }
@@ -78,7 +79,7 @@ void MPU6050::Read_Data()
             // Ang_Vel_Acc[0] = Ang[0];
             // Ang_Vel_Acc[1] = Ang[1];
             // Ang_Vel_Acc[2] = Ang[2];
-            // std::cout<<Ang[0]<<","<<Vel[0]<<","<<Acc[0]<<std::endl;
+            std::cout<<Ang[0]<<","<<Ang[0]<<","<<Ang[0]<<std::endl;
         }
     }
 }
