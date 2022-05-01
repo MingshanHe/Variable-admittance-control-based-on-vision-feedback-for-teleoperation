@@ -29,4 +29,6 @@ private:
 private:
     double                      upperArm;
     double                      foreArm;
+
+    double                      x, y, z;
 };

@@ -4,6 +4,7 @@ MPU6050::MPU6050(const char * Device_, int Baudrate_, ros::NodeHandle nh_) :
     Serial()
 {
     nh = nh_;
+    InitFlag = true;
     std::string name_space = nh_.getNamespace();
     IMU_Pub = nh.advertise<geometry_msgs::Vector3>(name_space+"/IMU",2);
 
@@ -18,10 +19,27 @@ void MPU6050::run(){
     ros::Rate loop_rate(115200);
     while (ros::ok())
     {
+        if(InitFlag){
+            float sum[3];
+            sum[0] = 0;
+            sum[1] = 0;
+            sum[2] = 0;
+            for (size_t i = 0; i < 1000; i++)
+            {
+                Read_Data();
+                sum[0] += Ang[0];
+                sum[1] += Ang[1];
+                sum[2] += Ang[2];
+            }
+            InitAng[0] = sum[0]/1000;
+            InitAng[1] = sum[1]/1000;
+            InitAng[2] = sum[2]/1000;
+            InitFlag = false;
+        }
         Read_Data();
-        msg.x = Ang[0]*PI/360;
-        msg.y = Ang[1]*PI/360;
-        msg.z = Ang[2]*PI/360;
+        msg.x = (Ang[0]-InitAng[0])*PI/180;
+        msg.y = (Ang[1]-InitAng[1])*PI/180;
+        msg.z = (Ang[2]-InitAng[2])*PI/180;
         IMU_Pub.publish(msg);
         loop_rate.sleep();
     }

@@ -13,9 +13,8 @@ public:
     void    run();
 
 public:
-    float                   angle_x;
-    float                   angle_y;
-    float                   angle_z;
+    bool                    InitFlag;
+    float                   InitAng[3];
 
     float                   Ang[3];
     float                   Vel[3];
