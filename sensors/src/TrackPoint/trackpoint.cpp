@@ -23,48 +23,48 @@ void TrackPoint::IMU1_Sub_Callback(const geometry_msgs::Vector3 &msg)
 
     IMU1_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "shoulder"));
 
-    static tf::TransformBroadcaster    IMU_TF_br;
-    transform.setOrigin(tf::Vector3(0.0, 1.0, 0.0));
-    transform.setRotation(q);
+    // static tf::TransformBroadcaster    IMU_TF_br;
+    // transform.setOrigin(tf::Vector3(0.0, 1.0, 0.0));
+    // transform.setRotation(q);
 
-    IMU_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "shoulder", "upperArm"));
+    // IMU_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "shoulder", "upperArm"));
 }
 
 void TrackPoint::IMU2_Sub_Callback(const geometry_msgs::Vector3 &msg)
 {
-    // static tf::TransformBroadcaster    IMU2_TF_br;
-    // tf::Transform transform;
-    // transform.setOrigin(tf::Vector3(0.0, 1.0, 0.0));
-    // tf::Quaternion q;
-    // q.setRPY(msg.x-x, msg.y-y, msg.z-z);
-    // transform.setRotation(q);
-
-    // IMU2_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "shoulder", "upperArm"));
-
-    // static tf::TransformBroadcaster    TF_br;
-    // transform.setOrigin(tf::Vector3(0.0, 1.0, 0.0));
-    // q.setRPY(msg.x-x, msg.y-y, msg.z-z);
-    // transform.setRotation(q);
-
-    // TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "upperArm", "foreArm"));
-    static tf::TransformBroadcaster    IMU1_TF_br;
+    static tf::TransformBroadcaster    IMU2_TF_br;
     tf::Transform transform;
-    transform.setOrigin(tf::Vector3(0.0, 0.0, 0.0));
-    tf::Quaternion q;
-    q.setRPY(msg.x, msg.y, msg.z);
-    x = msg.x;
-    y = msg.y;
-    z = msg.z;
-
-    transform.setRotation(q);
-
-    IMU1_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "shoulder2"));
-
-    static tf::TransformBroadcaster    IMU_TF_br;
     transform.setOrigin(tf::Vector3(0.0, 1.0, 0.0));
+    tf::Quaternion q;
+    q.setRPY(msg.x-x, msg.y-y, msg.z-z);
     transform.setRotation(q);
 
-    IMU_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "shoulder2", "upperArm2"));
+    IMU2_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "shoulder", "upperArm"));
+
+    static tf::TransformBroadcaster    TF_br;
+    transform.setOrigin(tf::Vector3(0.0, 1.0, 0.0));
+    q.setRPY(msg.x-x, msg.y-y, msg.z-z);
+    transform.setRotation(q);
+
+    TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "upperArm", "foreArm"));
+    // static tf::TransformBroadcaster    IMU1_TF_br;
+    // tf::Transform transform;
+    // transform.setOrigin(tf::Vector3(0.0, 0.0, 0.0));
+    // tf::Quaternion q;
+    // q.setRPY(msg.x, msg.y, msg.z);
+    // x = msg.x;
+    // y = msg.y;
+    // z = msg.z;
+
+    // transform.setRotation(q);
+
+    // IMU1_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "world", "shoulder2"));
+
+    // static tf::TransformBroadcaster    IMU_TF_br;
+    // transform.setOrigin(tf::Vector3(0.0, 1.0, 0.0));
+    // transform.setRotation(q);
+
+    // IMU_TF_br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "shoulder2", "upperArm2"));
 }
 
 bool TrackPoint::get_rotation_matrix(std::string from_frame, std::string to_frame) {
