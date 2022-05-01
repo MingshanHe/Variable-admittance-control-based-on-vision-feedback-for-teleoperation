@@ -1,11 +1,12 @@
 #include "MPU6050/Serial.h"
 #include "ros/ros.h"
 #include "geometry_msgs/Vector3.h"
+#define PI 3.1415926
 
 class MPU6050 : public Serial
 {
 public:
-    MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::NodeHandle nh_);
+    MPU6050(const char * Device_, int Baudrate_, ros::NodeHandle nh_);
     ~MPU6050(){};
 public:
     void Read_Data();
@@ -35,7 +36,6 @@ private:
     ros::NodeHandle         nh;
     ros::Timer              timer_;
     ros::Publisher          IMU_Pub;
-    // ros::Rate           loop_rate;
 
     geometry_msgs::Vector3  msg;
 };

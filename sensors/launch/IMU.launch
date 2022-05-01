@@ -1,30 +1,13 @@
 <?xml version="1.0"?>
 <launch>
 
-    <!-- <group ns="IMU1"> -->
-    <!-- <arg name="usb" default="/dev/ttyUSB0"/>
-    <arg name="imu" default="imu1"/>
-    <param name="frequency" type="double" value="125" />
-    <param name="usb" value="$(arg usb)" />
-    <param name="imu" value="$(arg imu)" /> -->
-    <node pkg="sensors" type="MPU6050_node" name="IMU1"/>
-        <!-- <param name="frequency" type="double" value="125" />
-        <param name="usb" value="$(arg usb)" />
-        <param name="imu" value="$(arg imu)" />
-    </node> -->
-    <!-- </group> -->
+    <group ns="IMU1">
+        <node pkg="sensors" type="MPU6050_1_node" name="IMU1"/>
+    </group>
 
-    <!-- <group ns="IMU2">
-        <arg name="usb" default="/dev/ttyUSB1"/>
-        <arg name="imu" default="imu2"/>
-        <param name="frequency" type="double" value="125" />
-        <param name="usb" value="$(arg usb)" />
-        <param name="imu" value="$(arg imu)" />
-        <node pkg="sensors" type="MPU6050_node" name="IMU2">
-            <param name="frequency" type="double" value="125" />
-            <param name="usb" value="$(arg usb)" />
-            <param name="imu" value="$(arg imu)" />
-        </node>
-    </group> -->
+    <group ns="IMU2">
+        <node pkg="sensors" type="MPU6050_2_node" name="IMU2"/>
+    </group>
 
+    <node pkg="sensors" type="Track_node" name="Track_node"/>
 </launch>

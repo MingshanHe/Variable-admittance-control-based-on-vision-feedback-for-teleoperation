@@ -1,40 +1,30 @@
 #include "MPU6050/MPU6050.h"
 
-MPU6050::MPU6050(const char * Device_, int Baudrate_, const char * Name_, ros::NodeHandle nh_) :
+MPU6050::MPU6050(const char * Device_, int Baudrate_, ros::NodeHandle nh_) :
     Serial()
 {
     nh = nh_;
-    IMU_Pub = nh.advertise<geometry_msgs::Vector3>("IMU",2);
-    // Serial serial;
-    // Serial_nFd = serial.Init(Device_, Baudrate_);
+    std::string name_space = nh_.getNamespace();
+    IMU_Pub = nh.advertise<geometry_msgs::Vector3>(name_space+"/IMU",2);
+
     Serial_nFd = this->Init(Device_,Baudrate_);
 
     Serial_k = 0;
     Serial_rxflag = 1;
     Serial_len=0;
-
-    Name = Name_;
-    // loop_rate = ros::Rate loop_rate_(125);
 }
 
 void MPU6050::run(){
     ros::Rate loop_rate(115200);
     while (ros::ok())
     {
-        float * Angle;
-
         Read_Data();
-        // msg.x = 0.0;
-        // msg.y = 1;
-        // msg.z = 2;
-        msg.x = Ang[0];
-        msg.y = Ang[1];
-        msg.z = Ang[2];
+        msg.x = Ang[0]*PI/360;
+        msg.y = Ang[1]*PI/360;
+        msg.z = Ang[2]*PI/360;
         IMU_Pub.publish(msg);
         loop_rate.sleep();
-        // std::cout<<"Published"<<std::endl;
     }
-
 }
 
 void MPU6050::Read_Data()
@@ -75,10 +65,7 @@ void MPU6050::Read_Data()
                     break;
                 }
             }
-            // float Ang_Vel_Acc[3];
-            // Ang_Vel_Acc[0] = Ang[0];
-            // Ang_Vel_Acc[1] = Ang[1];
-            // Ang_Vel_Acc[2] = Ang[2];
+
             std::cout<<Ang[0]<<","<<Ang[1]<<","<<Ang[2]<<std::endl;
         }
     }
